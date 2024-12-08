@@ -1,11 +1,11 @@
-import React, { useState } from "react"
+import React, { createContext, useState } from "react"
 import * as Telegram from "./Telegram";
 import { Client, login, UserState } from "./api/client";
 import Profile from "./Profile";
 
 function Loading() {
     return <div className="w-screen h-stable bg-tg-secondary-bg text-tg-text flex flex-col items-center justify-center">
-        
+        <div className="w-10 h-10 bg-tg-bg rounded animate-spin"></div>
     </div>
 }
 
@@ -16,6 +16,8 @@ function UnactiveAccount() {
         </div>
     </div>
 }
+
+export const AuthContext = createContext<Client>(undefined);
 
 export default function App() {
     let [client, setClient] = useState<Client | null>(null);
@@ -31,7 +33,7 @@ export default function App() {
     }, []);
     return <>
         {
-            state == null ? <Loading/> : <>{state == 'active' ? <Profile/> : <UnactiveAccount/> }</>
+            state == null ? <Loading/> : <>{state == 'active' ? <AuthContext value={client}><Profile/></AuthContext> : <UnactiveAccount/> }</>
         }
     </>;
 }

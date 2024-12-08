@@ -2,6 +2,14 @@ import axios, { AxiosError } from "axios";
 
 export type UserState = 'unactive' | 'active' | 'banned'; 
 
+export type UserInfo = {
+    id: string,
+    username: string,
+    amount: number,
+    accounts: [],
+    credits: [],
+}
+
 export class Client {
     private token: string;
 
@@ -16,15 +24,22 @@ export class Client {
             response = await axios.get('/api/getMyState', { headers: { Authorization: this.token }});
         } catch (e) {
             if (e instanceof AxiosError) {
-                if (e.response && e.response.data['reason']) {
-                    if (e.status == 403) {
-                        throw new AuthException(e.response.data['reason']);
-                    }
-                }
                 throw new UnknownException(e.status)
             }
         }
         return response.data['state'];
+    }
+
+    async getMyUserInfo(): Promise<UserInfo> {
+        let response;
+        try {
+            response = await axios.get('/api/getMyUserInfo', { headers: { Authorization: this.token }});
+        } catch (e) {
+            if (e instanceof AxiosError) {
+                throw new UnknownException(e.status)
+            }
+        }
+        return response.data;
     }
 }
 

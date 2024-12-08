@@ -43,6 +43,25 @@ app.get('/api/getMyState', async (req, res) => {
     }
 });
 
+app.get('/api/getMyUserInfo', async (req, res) => {
+    try {
+        let token = req.header('Authorization');
+        if (token == null) {
+            throw new TelegramWebAppException();
+        }
+        res.json(await user.getMyUserInfo(token));
+    } catch (e) {
+        if (e instanceof TelegramWebAppException) {
+            res.status(403).json({ reason: 'Invalid token' });
+        } else if (e instanceof user.UserNotFoundException) {
+            res.status(404).json({ reason: 'User not found' });
+        } else {
+            console.log(e);
+            res.status(500).json({ reason: 'Unknown error' });
+        }
+    }
+});
+
 app.use('/', e.static('./web/dist'));
 
 
