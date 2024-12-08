@@ -2,7 +2,7 @@
   "name": "cbz",
   "main": "./dist/index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "gulp",
     "start": "ts-node src"
   },
   "devDependencies": {
@@ -20,6 +20,7 @@
   "dependencies": {
     "@prisma/client": "^6.0.1",
     "@types/express": "^5.0.0",
+    "body-parser": "^1.20.3",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",

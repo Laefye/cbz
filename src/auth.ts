@@ -5,14 +5,14 @@ import jwt, { JsonWebTokenError } from 'jsonwebtoken';
 import { z } from 'zod';
 import { serialize } from 'node:v8';
 
-class TelegramWebAppException extends Error {
+export class TelegramWebAppException extends Error {
     constructor() {
         super('Invalid init data');
     }
 }
 
 const Key = z.object({
-    telegram_id: z.number(),
+    telegramId: z.number(),
 })
 
 export function telegramWebAppSignIn(initData: string) {
@@ -38,7 +38,7 @@ export function telegramWebAppSignIn(initData: string) {
         throw new TelegramWebAppException();
     }
     let key: z.infer<typeof Key> = {
-        telegram_id: user['id'],
+        telegramId: user['id'],
     }
     return jwt.sign(key, secret, { algorithm: 'HS256' });
 }
@@ -54,6 +54,6 @@ export function telegramWebAppVerifyToken(token: string): z.infer<typeof Key> {
         throw e;
     }
     return {
-        telegram_id: payload.telegram_id,
+        telegramId: payload.telegramId,
     };
 }
