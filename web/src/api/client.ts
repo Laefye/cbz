@@ -2,11 +2,17 @@ import axios, { AxiosError } from "axios";
 
 export type UserState = 'unactive' | 'active' | 'banned'; 
 
+export type Account = {
+    id: string,
+    type: 'private' | 'shared',
+    balance: number,
+    name: string,
+}
+
 export type UserInfo = {
     id: string,
     username: string,
-    amount: number,
-    accounts: [],
+    accounts: Account[],
     credits: [],
 }
 
@@ -40,6 +46,17 @@ export class Client {
             }
         }
         return response.data;
+    }
+
+    async createAccount(name: string): Promise<void> {
+        let response;
+        try {
+            response = await axios.post('/api/createAccount', { name }, { headers: { Authorization: this.token }});
+        } catch (e) {
+            if (e instanceof AxiosError) {
+                throw new UnknownException(e.status)
+            }
+        }
     }
 }
 

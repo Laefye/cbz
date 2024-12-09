@@ -11,7 +11,8 @@ module.exports = {
                 'tg-section-bg': 'var(--tg-theme-section-bg-color)',
                 'tg-section-header-text': 'var(--tg-theme-hint-color)',
                 'tg-section-separator': 'var(--tg-theme-section-separator-color)',
-
+                'tg-button-text': 'var(--tg-theme-button-text-color)',
+                'tg-destructive': 'var(--tg-theme-destructive-text-color)',
             },
             extend: {
                 height: {

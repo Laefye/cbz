@@ -11,4 +11,13 @@ model User {
   id          String @id @default(uuid())
   telegramId  BigInt
   username    String
+  accounts    Account[]
+}
+
+model Account {
+    id       String @id
+    name     String
+    user     User  @relation(fields: [userId], references: [id])
+    userId   String
+    balance  Int   @default(0)
 }

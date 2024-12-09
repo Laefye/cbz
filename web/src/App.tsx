@@ -11,8 +11,9 @@ function Loading() {
 
 function UnactiveAccount() {
     return <div className="w-screen h-stable bg-tg-secondary-bg text-tg-text flex flex-col justify-center">
-        <div className="bg-tg-section-bg shadow py-4 px-2">
-            <p>Ваш аккаунт не активен</p>
+        <div className="bg-tg-section-bg shadow py-4 px-2 mx-4 rounded-xl">
+            <p className="mb-2">Ваш аккаунт не активен</p>
+            <p>Вам необходимо обратится для активации</p>
         </div>
     </div>
 }

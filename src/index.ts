@@ -62,6 +62,40 @@ app.get('/api/getMyUserInfo', async (req, res) => {
     }
 });
 
+app.post('/api/createAccount', async (req, res) => {
+    try {
+        let token = req.header('Authorization');
+        if (token == null) {
+            throw new TelegramWebAppException();
+        }
+        let body = z.object({ name: z.string() }).parse(req.body);
+        res.json(await user.createAccount(token, body.name));
+    } catch (e) {
+        if (e instanceof TelegramWebAppException) {
+            res.status(403).json({ reason: 'Invalid token' });
+        } else if (e instanceof z.ZodError) {
+            res.status(400).json({ reason: 'Bad request' });
+        } else if (e instanceof user.UserNotFoundException) {
+            res.status(404).json({ reason: 'User not found' });
+        } else if (e instanceof user.CreatingAccountException) {
+            switch (e.message) {
+                case 'name is required':
+                    res.status(400).json({ reason: 'Name is required' });
+                    break;
+                case 'name is very big':
+                    res.status(400).json({ reason: 'Name is very big' });
+                    break;
+                default:
+                    res.status(400).json({ reason: 'Bad request' });
+                    break;
+            }
+        } else {
+            console.log(e);
+            res.status(500).json({ reason: 'Unknown error' });
+        }
+    }
+});
+
 app.use('/', e.static('./web/dist'));
 
 
