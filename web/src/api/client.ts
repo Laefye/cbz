@@ -16,6 +16,22 @@ export type UserInfo = {
     credits: [],
 }
 
+export type Transaction = {
+    id: string,
+    from: string,
+    fromUsername: string,
+    to: string,
+    toUsername: string,
+    amount: number,
+    date: number,
+}
+
+export class MakingTransferException extends Error {
+    constructor(message?: string) {
+        super(message);
+    }
+}
+
 export class Client {
     private token: string;
 
@@ -57,6 +73,23 @@ export class Client {
                 throw new UnknownException(e.status)
             }
         }
+    }
+
+    async makeTransfer(from: string, to: string, amount: number): Promise<Transaction> {
+        let response;
+        try {
+            response = await axios.post('/api/makeTransfer', { from, to, amount }, { headers: { Authorization: this.token }});
+        } catch (e) {
+            if (e instanceof AxiosError) {
+                if (e.response) {
+                    if (e.response.data['reason'] == 'Not found receiver account') {
+                        throw new MakingTransferException('Not found receiver account');
+                    }
+                }
+                throw new UnknownException(e.status)
+            }
+        }
+        return response.data;
     }
 }
 

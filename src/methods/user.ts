@@ -91,3 +91,38 @@ export async function createAccount(token: string, name: string): Promise<Create
         id: account.id,
     }
 }
+
+type Transaction = {
+    id: string,
+    from: string,
+    fromUsername: string,
+    to: string,
+    toUsername: string,
+    amount: number,
+    date: number,
+}
+
+export class MakingTransferException extends Error {
+    constructor(message?: string) {
+        super(message);
+    }
+}
+
+export async function makeTransfer(token: string, from: string, to: string, amount: number): Promise<Transaction> {
+    if (amount <= 0) throw new MakingTransferException('Amount must be positive');
+    let user = await authUser(token);
+    let account = await prisma.account.findFirst({ where: {id: from, userId: user.id}});
+    if (account == null) throw new MakingTransferException('Not found sender account');
+    let accountReceiver = await prisma.account.findFirst({ where: {id: to}});
+    if (accountReceiver == null) throw new MakingTransferException('Not found receiver account');
+    return {
+        id: 'nothing',
+        amount: amount,
+        date: new Date().getTime(),
+        from: account.id,
+        fromUsername: user.username,
+        to: accountReceiver.id,
+        toUsername: (await prisma.user.findFirst({ where: { id: accountReceiver.userId }}))!.username,
+    };
+}
+
