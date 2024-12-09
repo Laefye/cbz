@@ -23,6 +23,7 @@ export default function Transfer({info, onTransfered}: {info: UserInfo, onTransf
         try {
             let transaction = await client.makeTransfer(from.current.value, to.current.value, amount.current.valueAsNumber);
         } catch (e) {
+            // TODO: Not instance of
             if (e instanceof MakingTransferException) {
                 if (e.message == 'Not found receiver account') {
                     setError('Не найден счёт получателя');

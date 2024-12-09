@@ -83,6 +83,7 @@ export class Client {
             if (e instanceof AxiosError) {
                 if (e.response) {
                     if (e.response.data['reason'] == 'Not found receiver account') {
+                        // TODO: Not instance of
                         throw new MakingTransferException('Not found receiver account');
                     }
                 }
